@@ -9,13 +9,13 @@ data class Planetas(
     val id: Long = 0, // O tipo Long é usado para IDs únicos
 
     @Column(nullable = false) // Define que o campo não pode ser nulo
-    val nome: String, // Nome do planeta
+    val name: String, // Nome do planeta
 
     @Column(nullable = false) // Define que o campo não pode ser nulo
-    val clima: String, // Clima do planeta
+    val climate: String, // Clima do planeta
 
     @Column(nullable = false) // Define que o campo não pode ser nulo
-    val terreno: String, // Terreno do planeta
+    val terrain: String, // Terreno do planeta
 
-    val aparicoes_em_filmes: Int = 0 // Número de aparições em filmes, com valor padrão 0
+    val movieAppearances: Int = 0 // Número de aparições em filmes, com valor padrão 0
 )
