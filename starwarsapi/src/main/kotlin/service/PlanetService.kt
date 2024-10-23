@@ -1,11 +1,16 @@
 package com.example.starwarsapi.service
 
+import com.example.starwarsapi.client.SwapiClient
 import com.example.starwarsapi.model.Planetas
 import com.example.starwarsapi.repository.PlanetasRepositorio
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
 
 @Service
-class PlanetService(val planetRepository: PlanetasRepositorio) {
+class PlanetService(
+    val planetRepository: PlanetasRepositorio,
+    val swapiClient: SwapiClient // Injetando o cliente SWAPI no serviço
+    ) {
 
     // Método para adicionar um novo planeta
     fun addPlanet(planet: Planetas): Planetas {
@@ -17,9 +22,15 @@ class PlanetService(val planetRepository: PlanetasRepositorio) {
         return planetRepository.findAll()
     }
 
-    // Método para buscar um planeta pelo ID
-    fun getPlanetById(id: Long): Planetas? {
-        return planetRepository.findById(id).orElse(null)
+    // Método para buscar um planeta pelo ID e também buscar a quantidade de filmes
+    fun getPlanetById(id: Long): Mono<PlanetDetailsResponse> {
+        val planet = planetRepository.findById(id).orElse(null) ?: return Mono.empty()
+
+        // Chama o cliente SWAPI para obter os detalhes do planeta
+        return swapiClient.getPlanetDetails(id).map { swapiResponse ->
+            val filmAppearances = swapiResponse.films.size // Número de aparições nos filmes
+            PlanetDetailsResponse(planet, filmAppearances)
+        }
     }
 
     // Método para buscar planetas pelo nome

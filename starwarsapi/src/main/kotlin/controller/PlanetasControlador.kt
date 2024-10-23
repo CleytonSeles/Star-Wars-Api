@@ -2,7 +2,9 @@ package com.example.starwarsapi.controller
 
 import com.example.starwarsapi.model.Planetas
 import com.example.starwarsapi.service.PlanetService
+import com.example.starwarsapi.service.PlanetDetailsResponse
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 
 @RestController // Indica que essa classe será um controlador REST
 @RequestMapping("/planets") // Define a URL base para todos os endpoints deste controlador
@@ -22,8 +24,13 @@ class PlanetasControlador(val planetService: PlanetService) {
 
     // Endpoint para buscar um planeta pelo ID
     @GetMapping("/{id}")
+
+    fun getPlanetById(@PathVariable id: Long): Mono<PlanetDetailsResponse> {
+        return planetService.getPlanetById(id)
+
     fun getPlanetById(@PathVariable id: Long): Planetas? {
         return planetService.getPlanetById(id)
+
     }
 
     // Endpoint para buscar planetas por nome
